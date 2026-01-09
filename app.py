@@ -43,6 +43,7 @@ if st.sidebar.button("Run Backtest", type="primary"):
     with st.spinner("Running backtest..."):
         try:
             if use_simulation:
+                st.warning("⚠️ SIMULATION MODE ACTIVE: The chart below uses generated RANDOM data for demonstration purposes. It does NOT reflect real historical market prices (e.g., QQQ price).")
                 # Use simulation data
                 dates, strategy_values, benchmark_values, _ = generate_simulation_results(
                     start_date=start_date.strftime('%Y-%m-%d'),

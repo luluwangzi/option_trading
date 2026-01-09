@@ -14,11 +14,27 @@ def generate_simulation_results(start_date='2020-01-01', end_date='2025-12-31', 
     
     # 模拟基准收益（QQQ）
     np.random.seed(42)
-    benchmark_returns = np.random.normal(0.0005, 0.015, len(dates))
-    benchmark_values = initial_capital * (1 + benchmark_returns).cumprod()
+    # 假设QQQ起始价格约为600 (2025/2026年水平)
+    base_price = 600
     
-    # 模拟策略收益（略优于基准）
-    strategy_returns = np.random.normal(0.0007, 0.012, len(dates))
+    # 使用更真实的波动率 (年化约15-20%)
+    daily_vol = 0.20 / np.sqrt(252)
+    daily_drift = 0.10 / 252 # 假设年化10%上涨
+    
+    benchmark_returns = np.random.normal(daily_drift, daily_vol, len(dates))
+    
+    # 生成价格序列
+    benchmark_prices = base_price * (1 + benchmark_returns).cumprod()
+    
+    # 将价格序列转换为资金曲线 (以初始资金为基准)
+    benchmark_values = initial_capital * (benchmark_prices / benchmark_prices[0])
+    
+    # 模拟策略收益（略优于基准，Alpha）
+    # 策略波动率通常略低于大盘 (因为有期权金缓冲)
+    strategy_vol = 0.15 / np.sqrt(252)
+    strategy_drift = 0.15 / 252 # 假设年化15%
+    
+    strategy_returns = np.random.normal(strategy_drift, strategy_vol, len(dates))
     strategy_values = initial_capital * (1 + strategy_returns).cumprod()
     
     return dates, strategy_values, benchmark_values, initial_capital
