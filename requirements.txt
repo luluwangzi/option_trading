@@ -1,0 +1,9 @@
+yfinance
+pandas
+numpy
+matplotlib
+scipy
+python-dateutil
+requests
+streamlit
+plotly
